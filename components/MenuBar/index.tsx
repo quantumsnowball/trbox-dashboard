@@ -2,7 +2,7 @@ import { AppBar, Toolbar } from "@mui/material"
 
 const MenuBar = () => {
   return (
-    <AppBar position="static">
+    <AppBar>
       <Toolbar>
       </Toolbar>
     </AppBar>
