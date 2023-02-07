@@ -1,7 +1,7 @@
 import { Box, Divider, SwipeableDrawer } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { APP_NAME, VERSION } from '../../../common/constants'
-import { tempActions } from '../../../redux/slices/temp'
+import { layoutTempActions } from '../../../redux/slices/layoutTemp'
 import { RootState } from '../../../redux/store'
 import AboutMenu from './AboutMenu'
 import { MenuTitle } from './common'
@@ -10,8 +10,8 @@ import { MenuTitle } from './common'
 function MenuDrawer() {
   const dispatch = useDispatch()
   const [menuOpen, setMenuOpen] = [
-    useSelector((s: RootState) => s.temp.menuOpen),
-    (open: boolean) => dispatch(tempActions.setMenuOpen(open))
+    useSelector((s: RootState) => s.layoutTemp.menuOpen),
+    (open: boolean) => dispatch(layoutTempActions.setMenuOpen(open))
   ]
 
   return (

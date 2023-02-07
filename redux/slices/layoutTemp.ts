@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 
-const tempSlice = createSlice({
-  name: 'temp',
+const layoutTempSlice = createSlice({
+  name: 'layoutTemp',
   initialState: {
     menuOpen: false,
   },
@@ -16,8 +16,8 @@ const tempSlice = createSlice({
   }
 })
 
-export const tempActions = tempSlice.actions
+export const layoutTempActions = layoutTempSlice.actions
 
-export const tempReducer = tempSlice.reducer
+export const layoutTempReducer = layoutTempSlice.reducer
 
 

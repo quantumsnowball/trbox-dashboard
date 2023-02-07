@@ -6,18 +6,24 @@ import {
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { layoutReducer } from './slices/layout'
-import { tempReducer } from './slices/temp'
+import { layoutTempReducer } from './slices/layoutTemp'
 
 
 // reducers
 const rootReducer = combineReducers({
   layout: layoutReducer,
-  temp: tempReducer
+  layoutTemp: layoutTempReducer
 })
 
 // store
 export const store = configureStore({
-  reducer: persistReducer({ key: 'root', storage, blacklist: ['temp',] }, rootReducer),
+  reducer: persistReducer({
+    key: 'root',
+    storage: storage,
+    blacklist: [
+      'layoutTemp',
+    ]
+  }, rootReducer),
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import MenuDrawer from "./MenuDrawer";
 import { useDispatch } from "react-redux";
-import { tempActions } from "@/redux/slices/temp";
+import { layoutTempActions } from "@/redux/slices/layoutTemp";
 import { APP_TITLE } from "@/common/constants";
 
 
@@ -16,7 +16,7 @@ const AppTitle = () =>
 
 const MenuButton = () => {
   const dispatch = useDispatch()
-  const toggleMenuDrawer = () => dispatch(tempActions.toggleMenuOpen())
+  const toggleMenuDrawer = () => dispatch(layoutTempActions.toggleMenuOpen())
   return (<IconButton
     color="inherit"
     aria-label="menu"
