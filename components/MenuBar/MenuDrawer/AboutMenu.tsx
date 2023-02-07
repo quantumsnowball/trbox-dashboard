@@ -6,7 +6,7 @@ import { RootState } from '../../../redux/store'
 import { useDispatch } from 'react-redux'
 import { layoutActions } from '../../../redux/slices/layout'
 import { MenuLabel, MenuButtonGrouper } from './common'
-import { APP_NAME, VERSION } from '../../../common/constants'
+import { VERSION } from '../../../common/constants'
 
 
 function AboutMenu() {

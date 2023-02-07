@@ -6,7 +6,12 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import MenuDrawer from "./MenuDrawer";
 import { useDispatch } from "react-redux";
 import { tempActions } from "@/redux/slices/temp";
+import { APP_TITLE } from "@/common/constants";
 
+const AppTitle = () =>
+  <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+    {APP_TITLE}
+  </Typography>
 
 const PageLink = ({ title, href }: { title: string, href: string }) =>
   <Typography
@@ -28,20 +33,17 @@ const MenuBar = () => {
   return (
     <>
       <AppBar>
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            TRBOX
-          </Typography>
+        <Toolbar sx={{ p: 1 }}>
+          <IconButton
+            color="inherit"
+            aria-label="menu"
+            onClick={toggleMenuDrawer}
+          >
+            <MenuIcon />
+          </IconButton>
+          <AppTitle />
           {
-            isSmall ?
-              <IconButton
-                color="inherit"
-                aria-label="menu"
-                onClick={toggleMenuDrawer}
-              >
-                <MenuIcon />
-              </IconButton>
-              :
+            isSmall ? null :
               <>
                 <PageLink title='Home' href='/' />
                 <PageLink title='Navs' href='/' />
