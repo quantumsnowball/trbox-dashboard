@@ -1,18 +1,17 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
 
 const layoutTempSlice = createSlice({
   name: 'layoutTemp',
   initialState: {
-    menuOpen: false,
+    menu: {
+      visible: false,
+    }
   },
   reducers: {
-    toggleMenuOpen: s => {
-      s.menuOpen = !s.menuOpen
-    },
-    setMenuOpen: (s, a: PayloadAction<boolean>) => {
-      s.menuOpen = a.payload
-    },
+    toggleMenu: s => { s.menu.visible = !s.menu.visible },
+    openMenu: s => { s.menu.visible = true },
+    closeMenu: s => { s.menu.visible = false },
   }
 })
 

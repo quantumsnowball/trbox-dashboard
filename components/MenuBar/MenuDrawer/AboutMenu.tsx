@@ -11,7 +11,7 @@ import { VERSION } from '../../../common/constants'
 
 function AboutMenu() {
   const dispatch = useDispatch()
-  const [aboutExpanded, toggleAboutExpanded] = [
+  const [state, toggle] = [
     useSelector((s: RootState) => s.layout.menuDrawer.about.expanded),
     () => dispatch(layoutActions.toggleAbout())
   ]
@@ -21,10 +21,10 @@ function AboutMenu() {
       <MenuButtonGrouper
         icon={<HelpOutlineIcon />}
         text='About'
-        open={aboutExpanded}
-        toggle={toggleAboutExpanded}
+        open={state}
+        toggle={toggle}
       />
-      <Collapse in={aboutExpanded} timeout="auto" unmountOnExit>
+      <Collapse in={state} timeout="auto" unmountOnExit>
         <List>
           <MenuLabel
             icon={<InfoIcon />}

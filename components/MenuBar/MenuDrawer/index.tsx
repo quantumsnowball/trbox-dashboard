@@ -9,26 +9,27 @@ import { MenuTitle } from './common'
 
 function MenuDrawer() {
   const dispatch = useDispatch()
-  const [menuOpen, setMenuOpen] = [
-    useSelector((s: RootState) => s.layoutTemp.menuOpen),
-    (open: boolean) => dispatch(layoutTempActions.setMenuOpen(open))
+  const [menuState, openMenu, closeMenu] = [
+    useSelector((s: RootState) => s.layoutTemp.menu.visible),
+    () => dispatch(layoutTempActions.openMenu()),
+    () => dispatch(layoutTempActions.closeMenu()),
   ]
 
   return (
     <SwipeableDrawer
       disableSwipeToOpen
       anchor="left"
-      open={menuOpen}
-      onOpen={() => setMenuOpen(true)}
-      onClose={() => setMenuOpen(false)}
+      open={menuState}
+      onOpen={openMenu}
+      onClose={closeMenu}
     >
       <Box
         sx={{
           width: 250
         }}
         role="presentation"
-        onClick={() => setMenuOpen(false)}
-        onKeyDown={() => setMenuOpen(false)}
+        onClick={closeMenu}
+        onKeyDown={closeMenu}
       >
         <MenuTitle title={`${APP_NAME}, ${VERSION}`} />
         <Divider />

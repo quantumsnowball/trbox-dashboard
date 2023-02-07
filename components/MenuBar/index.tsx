@@ -16,11 +16,11 @@ const AppTitle = () =>
 
 const MenuButton = () => {
   const dispatch = useDispatch()
-  const toggleMenuDrawer = () => dispatch(layoutTempActions.toggleMenuOpen())
+  const toggle = () => dispatch(layoutTempActions.toggleMenu())
   return (<IconButton
     color="inherit"
     aria-label="menu"
-    onClick={toggleMenuDrawer}
+    onClick={toggle}
   >
     <MenuIcon />
   </IconButton>
