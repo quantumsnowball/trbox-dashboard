@@ -3,7 +3,7 @@ import { styled } from '@mui/material'
 
 const Div = styled('div')`
   display: flex;
-  flex-direction: column;
+  flex-flow: column nowrap;
   justify-content: space-between;
   align-items: center;
 `;
