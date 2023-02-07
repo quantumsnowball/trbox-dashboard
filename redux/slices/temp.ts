@@ -7,6 +7,9 @@ const tempSlice = createSlice({
     menuOpen: false,
   },
   reducers: {
+    toggleMenuOpen: s => {
+      s.menuOpen = !s.menuOpen
+    },
     setMenuOpen: (s, a: PayloadAction<boolean>) => {
       s.menuOpen = a.payload
     },

@@ -5,11 +5,13 @@ import {
   FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER,
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import { layoutReducer } from './slices/layout'
 import { tempReducer } from './slices/temp'
 
 
 // reducers
 const rootReducer = combineReducers({
+  layout: layoutReducer,
   temp: tempReducer
 })
 
