@@ -8,48 +8,56 @@ import { useDispatch } from "react-redux";
 import { tempActions } from "@/redux/slices/temp";
 import { APP_TITLE } from "@/common/constants";
 
+
 const AppTitle = () =>
   <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
     {APP_TITLE}
   </Typography>
 
-const PageLink = ({ title, href }: { title: string, href: string }) =>
-  <Typography
-    variant='h6'
-    sx={{
-      mx: 1
-    }}
+const MenuButton = () => {
+  const dispatch = useDispatch()
+  const toggleMenuDrawer = () => dispatch(tempActions.toggleMenuOpen())
+  return (<IconButton
+    color="inherit"
+    aria-label="menu"
+    onClick={toggleMenuDrawer}
   >
-    <Link href={href}>{title}</Link>
-  </Typography>
+    <MenuIcon />
+  </IconButton>
+  )
+}
 
+const PageLinks = () => {
+  const PageLink = ({ title, href }: { title: string, href: string }) =>
+    <Typography
+      variant='h6'
+      sx={{
+        mx: 1
+      }}
+    >
+      <Link href={href}>{title}</Link>
+    </Typography>
+
+  return (
+    <>
+      <PageLink title='Home' href='/' />
+      <PageLink title='Navs' href='/' />
+      <PageLink title='Trade Log' href='/' />
+    </>
+  )
+}
 
 const MenuBar = () => {
-  const dispatch = useDispatch()
   const theme = useTheme()
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
-  const toggleMenuDrawer = () => dispatch(tempActions.toggleMenuOpen())
 
   return (
     <>
       <AppBar>
         <Toolbar sx={{ p: 1 }}>
-          <IconButton
-            color="inherit"
-            aria-label="menu"
-            onClick={toggleMenuDrawer}
-          >
-            <MenuIcon />
-          </IconButton>
+          <MenuButton />
           <AppTitle />
-          {
-            isSmall ? null :
-              <>
-                <PageLink title='Home' href='/' />
-                <PageLink title='Navs' href='/' />
-                <PageLink title='Trade Log' href='/' />
-              </>
-          }
+          {isSmall ? null : <PageLinks />}
         </Toolbar>
       </AppBar>
       <MenuDrawer />
