@@ -1,4 +1,5 @@
 import { Paper, styled, Typography } from '@mui/material'
+import LightWeightChart from '../components/LightWeightChart'
 
 
 const Div = styled('div')`
@@ -22,6 +23,7 @@ export default function Navs() {
           textAlign: 'center'
         }}>
         <Typography variant='h4'>Equity Curve Section</Typography>
+        <LightWeightChart />
       </Paper>
     </Div>
   )
