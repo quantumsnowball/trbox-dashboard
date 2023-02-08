@@ -1,18 +1,34 @@
 import {
-  List, ListItem, ListItemButton, ListItemIcon, ListItemText,
+  IconButton,
+  List, ListItem, ListItemButton, ListItemIcon, ListItemText, useTheme,
 } from '@mui/material'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
+import { themeActions } from '@/redux/slices/theme'
+import { useDispatch } from 'react-redux'
+import LightModeIcon from '@mui/icons-material/LightMode'
+import DarkModeIcon from '@mui/icons-material/DarkMode'
 
 
 export const MenuTitle = (
   { title }:
     { title: string }
 ) => {
+  const dispatch = useDispatch()
+  const theme = useTheme()
   return (
     <List>
       <ListItem>
         <ListItemText primary={title} />
+        <IconButton
+          color='inherit'
+          onClick={e => {
+            dispatch(themeActions.toggleMode())
+            e.stopPropagation()
+          }}>
+          {theme.palette.mode === 'light' ?
+            <LightModeIcon /> : <DarkModeIcon />}
+        </IconButton>
       </ListItem>
     </List>
   )

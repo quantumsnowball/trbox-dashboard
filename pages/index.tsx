@@ -1,4 +1,4 @@
-import { styled } from '@mui/material'
+import { Paper, styled, Typography } from '@mui/material'
 
 
 const Div = styled('div')`
@@ -16,9 +16,15 @@ const Div = styled('div')`
 export default function Home() {
   return (
     <Div>
-      <h1>Welcome to TrBox Console</h1>
-      <h2>Hello World!</h2>
-      <h2>This is the all-in-one algo trading dashboard you ever need.</h2>
+      <Paper
+        sx={{
+          width: '100%',
+          textAlign: 'center'
+        }}>
+        <Typography variant='h4'>Welcome to TrBox Console</Typography>
+        <Typography variant='h5'>Hello World!</Typography>
+        <Typography variant='h5'>This is the all-in-one algo trading dashboard you ever need.</Typography>
+      </Paper>
     </Div>
   )
 }

@@ -17,13 +17,14 @@ const AppTitle = () =>
 const MenuButton = () => {
   const dispatch = useDispatch()
   const toggle = () => dispatch(layoutTempActions.toggleMenu())
-  return (<IconButton
-    color="inherit"
-    aria-label="menu"
-    onClick={toggle}
-  >
-    <MenuIcon />
-  </IconButton>
+  return (
+    <IconButton
+      color="inherit"
+      aria-label="menu"
+      onClick={toggle}
+    >
+      <MenuIcon />
+    </IconButton>
   )
 }
 
