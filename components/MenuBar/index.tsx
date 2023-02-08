@@ -42,8 +42,8 @@ const PageLinks = () => {
   return (
     <>
       <PageLink title='Home' href='/' />
-      <PageLink title='Navs' href='/' />
-      <PageLink title='Trade Log' href='/' />
+      <PageLink title='Navs' href='/navs' />
+      <PageLink title='Trade Log' href='/tradelog' />
     </>
   )
 }
