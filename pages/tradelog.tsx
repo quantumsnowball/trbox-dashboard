@@ -16,8 +16,10 @@ const Div = styled('div')`
 `;
 
 // connect to ws
+const DEV_DOMAIN = 'localhost:5000'
 // p.s. same instance of socket is reused
-const socket = io('ws://localhost:5000')
+const socket = (process.env.NODE_ENV === "production") ? io() : io(DEV_DOMAIN)
+
 
 export default function TradeLog() {
   const [msgList, setMsgList] = useState([] as string[])
