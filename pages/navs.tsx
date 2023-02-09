@@ -1,5 +1,5 @@
 import { Paper, styled, Typography } from '@mui/material'
-import LightWeightChart from '../components/LightWeightChart'
+import TradingViewChart, { SAMPLE_COLOR, SAMPLE_DATA } from '../components/LightWeightChart'
 
 
 const Div = styled('div')`
@@ -23,7 +23,7 @@ export default function Navs() {
           textAlign: 'center'
         }}>
         <Typography variant='h4'>Equity Curve Section</Typography>
-        <LightWeightChart />
+        <TradingViewChart data={SAMPLE_DATA} colors={{ ...SAMPLE_COLOR }} />
       </Paper>
     </Div>
   )
