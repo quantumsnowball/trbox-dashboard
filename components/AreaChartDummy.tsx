@@ -3,6 +3,7 @@ import {
   ColorType,
   SeriesDataItemTypeMap,
   SeriesType,
+  ISeriesApi,
 } from 'lightweight-charts';
 import React, { FC, PropsWithChildren, useEffect, useRef } from 'react';
 
@@ -41,7 +42,7 @@ type ChartComponentProps = {
   }
 } & PropsWithChildren
 
-const TradingViewChart: FC<ChartComponentProps> = (props) => {
+const AreaChartDummy: FC<ChartComponentProps> = (props) => {
   const {
     data,
     colors: {
@@ -54,6 +55,7 @@ const TradingViewChart: FC<ChartComponentProps> = (props) => {
   } = props;
 
   const ctnRef = useRef<HTMLDivElement | null>(null);
+  let series: ISeriesApi<'Area'>
 
   // after comp mount 
   useEffect(
@@ -77,7 +79,7 @@ const TradingViewChart: FC<ChartComponentProps> = (props) => {
       chart.timeScale().fitContent();
 
       // add data
-      const series = chart.addAreaSeries({
+      series = chart.addAreaSeries({
         lineColor,
         topColor: areaTopColor,
         bottomColor: areaBottomColor
@@ -102,9 +104,32 @@ const TradingViewChart: FC<ChartComponentProps> = (props) => {
     [data, backgroundColor, lineColor, textColor, areaTopColor, areaBottomColor]
   );
 
+  // try to update chart data
+  useEffect(() => {
+    const BASE = 22.67
+    const SCALE = 2
+    const INTERVAL = 2000
+    const START_DATE = new Date('2019-01-01')
+    const ONE_DAY = 60 * 60 * 24 * 1000
+    // do every 2 secs 
+    let delta = 0
+    const timer = setInterval(() => {
+      const value = BASE + Math.random() * SCALE;
+      const time = new Date(START_DATE.getTime() + delta * ONE_DAY).toISOString().slice(0, 10)
+      delta++
+      console.log(time)
+      series.update({ time, value })
+    }, INTERVAL)
+
+    // remove timer
+    return () => {
+      clearInterval(timer)
+    }
+  }, [])
+
   return (
     <div ref={ctnRef} />
   );
 };
 
-export default TradingViewChart
+export default AreaChartDummy
