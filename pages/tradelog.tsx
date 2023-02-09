@@ -1,5 +1,5 @@
 import { Button, Paper, styled, Typography } from '@mui/material'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { io } from "socket.io-client";
 
 
@@ -15,17 +15,23 @@ const Div = styled('div')`
   align-items: center;
 `;
 
+// connect to ws
+// p.s. same instance of socket is reused
+const socket = io('ws://localhost:5000')
+
 export default function TradeLog() {
-  const socket = io('ws://localhost:5000')
+  const [msgList, setMsgList] = useState([] as string[])
 
   useEffect(() => {
-    // connect to ws
-    //
+    // register handlers
+    socket.on('message', (msg: string) => {
+      setMsgList(msgList => [...msgList, msg])
+    })
     // regularly send message to ws
     // clean up timer
     return () => {
     }
-  }, [])
+  }, [socket])
   return (
     <Div>
       <Paper
@@ -38,12 +44,21 @@ export default function TradeLog() {
       <Button
         variant='contained'
         onClick={() => {
-          console.log('trying to send message to ws')
-          socket.send('hello I am ReactJS')
+          socket.send(new Date().getTime())
         }}
       >
         Send
       </Button>
+      {
+        msgList.map(
+          (msg: string) =>
+            <Typography
+              key={msg}
+              variant='h6'
+            >{msg}
+            </Typography>
+        )
+      }
     </Div>
   )
 }
