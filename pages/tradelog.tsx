@@ -1,5 +1,5 @@
 import { Button, Paper, styled, Typography } from '@mui/material'
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 const Div = styled('div')`
@@ -15,26 +15,27 @@ const Div = styled('div')`
 `;
 
 // connect to ws
-const DOMAIN = 'localhost:5000'
 const DEV_DOMAIN = 'localhost:5000'
-// p.s. same instance of socket is reused
-// const socket = (process.env.NODE_ENV === "production") ? io() : io(DEV_DOMAIN)
 
 
 export default function TradeLog() {
-  const [ws, setWs] = useState<WebSocket | null>(null)
+  const [socket, setSocket] = useState<WebSocket | null>(null)
   const [msgList, setMsgList] = useState([] as string[])
 
+  // try to connect after first render
   useEffect(() => {
-    setWs(() => new WebSocket(`ws://${process.env.NODE_ENV === 'production' ? DOMAIN : DEV_DOMAIN}`))
+    setSocket(() => new WebSocket(`ws://${process.env.NODE_ENV === 'production' ?
+      window.location.host : DEV_DOMAIN}`))
   }, [])
+
+  // register handlers if connected
   useEffect(() => {
-    // register handlers
-    ws?.addEventListener('message', msg => {
+    socket?.addEventListener('message', msg => {
       console.log(msg)
       setMsgList(msgList => [...msgList, msg.data.toString()])
     })
-  }, [ws])
+  }, [socket])
+
   return (
     <Div>
       <Paper
@@ -47,8 +48,11 @@ export default function TradeLog() {
       <Button
         variant='contained'
         onClick={() => {
-          // socket.send(new Date().getTime())
-          ws?.send((new Date().getTime()).toString())
+          try {
+            socket?.send((new Date().getTime()).toString())
+          } catch (err) {
+            console.log(err)
+          }
         }}
       >
         Send
