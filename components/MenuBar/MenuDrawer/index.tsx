@@ -5,6 +5,7 @@ import { layoutTempActions } from '../../../redux/slices/layoutTemp'
 import { RootState } from '../../../redux/store'
 import AboutMenu from './AboutMenu'
 import { MenuTitle } from './common'
+import SettingsMenu from './SettingsMenu'
 
 
 function MenuDrawer() {
@@ -32,6 +33,8 @@ function MenuDrawer() {
         onKeyDown={closeMenu}
       >
         <MenuTitle title={`${APP_NAME}, ${VERSION}`} />
+        <Divider />
+        <SettingsMenu />
         <Divider />
         <AboutMenu />
       </Box>

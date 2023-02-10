@@ -45,6 +45,19 @@ export const MenuLabel = (
     <ListItemText primary={label} primaryTypographyProps={primaryTypographyProps} />
   </ListItem>
 
+export const MenuButton = (
+  { icon, text, onClick, level = 0 }:
+    { icon: JSX.Element, text: string, onClick?: React.MouseEventHandler<HTMLDivElement> | undefined, level?: number }
+) =>
+  <ListItem key={text} disablePadding>
+    <ListItemButton onClick={onClick} sx={{ paddingLeft: 2 + level * 2 }}>
+      <ListItemIcon>
+        {icon}
+      </ListItemIcon>
+      <ListItemText primary={text} />
+    </ListItemButton>
+  </ListItem >
+
 export const MenuButtonGrouper = (
   { icon, text, open, toggle }:
     { icon: JSX.Element, text: string, open: boolean, toggle: () => void }
@@ -61,4 +74,3 @@ export const MenuButtonGrouper = (
       {open ? <ExpandLess /> : <ExpandMore />}
     </ListItemButton>
   </ListItem>
-
