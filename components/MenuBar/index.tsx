@@ -11,7 +11,9 @@ import { APP_TITLE } from "@/common/constants";
 
 const AppTitle = () =>
   <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-    {APP_TITLE}
+    <Link href='/'>
+      {APP_TITLE}
+    </Link>
   </Typography>
 
 const MenuButton = () => {
