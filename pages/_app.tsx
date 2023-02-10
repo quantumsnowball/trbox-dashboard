@@ -3,12 +3,22 @@ import ReduxWrapper from '@/redux/wrapper'
 import '@/styles/globals.css'
 import ThemeWrapper from '@/styles/wrapper'
 import type { AppProps } from 'next/app'
-import { withRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
-function App({ Component, pageProps, router }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
+  const router = useRouter()
   useEffect(() => {
-    router.push(window.location.pathname)
+    try {
+      // F5 refresh a pathname will land on same client side page
+      router.push(window.location.pathname)
+      // BUG when typed in a wrong url, yield the following error in dev mode:
+      // Error: Invariant: attempted to hard navigate to the same URL
+    } catch (err) {
+      // TODO can't really catch the not found error 
+      console.log(err)
+      router.replace('/notfound')
+    }
   }, [])
 
   return (
@@ -21,4 +31,4 @@ function App({ Component, pageProps, router }: AppProps) {
   )
 }
 
-export default withRouter(App)
+export default App
