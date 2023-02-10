@@ -3,8 +3,14 @@ import ReduxWrapper from '@/redux/wrapper'
 import '@/styles/globals.css'
 import ThemeWrapper from '@/styles/wrapper'
 import type { AppProps } from 'next/app'
+import { withRouter } from 'next/router'
+import { useEffect } from 'react'
 
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps, router }: AppProps) {
+  useEffect(() => {
+    router.push(window.location.pathname)
+  }, [])
+
   return (
     <ReduxWrapper>
       <ThemeWrapper>
@@ -14,3 +20,5 @@ export default function App({ Component, pageProps }: AppProps) {
     </ReduxWrapper>
   )
 }
+
+export default withRouter(App)
