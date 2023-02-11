@@ -1,4 +1,4 @@
-import { Button, Paper, styled, Typography } from '@mui/material'
+import { Button, Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { useEffect, useState } from 'react';
 
 
@@ -17,10 +17,17 @@ const Div = styled('div')`
 // connect to ws
 const PORT_WS = 8000
 
+type TableData = {
+  timestamp: string
+  symbol: string
+  action: string
+  price: number
+  quantity: number
+}
 
 export default function TradeLog() {
   const [socket, setSocket] = useState<WebSocket | null>(null)
-  const [msgList, setMsgList] = useState([] as string[])
+  const [msgList, setMsgList] = useState([] as TableData[])
 
   // try to connect after first render
   useEffect(() => {
@@ -31,8 +38,14 @@ export default function TradeLog() {
   // register handlers if connected
   useEffect(() => {
     socket?.addEventListener('message', msg => {
-      console.log(JSON.parse(msg.data))
-      setMsgList(msgList => [msg.data.toString(), ...msgList])
+      const d = JSON.parse(msg.data)
+      setMsgList(msgList => [{
+        timestamp: d.timestamp,
+        symbol: d.order.symbol,
+        action: d.action,
+        price: d.price,
+        quantity: d.quantity,
+      }, ...msgList])
     })
   }, [socket])
 
@@ -57,16 +70,33 @@ export default function TradeLog() {
       >
         Send
       </Button>
-      {
-        msgList.map(
-          (msg: string) =>
-            <Typography
-              key={msg}
-              variant='h6'
-            >{msg}
-            </Typography>
-        )
-      }
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Time</TableCell>
+              <TableCell align="right">Symbol</TableCell>
+              <TableCell align="right">Action</TableCell>
+              <TableCell align="right">Price</TableCell>
+              <TableCell align="right">Quantity</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {msgList.map(({ timestamp, symbol, action, price, quantity }) => (
+              <TableRow
+                key={timestamp}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell component="th" scope="row"> {timestamp} </TableCell>
+                <TableCell align="right">{symbol}</TableCell>
+                <TableCell align="right">{action}</TableCell>
+                <TableCell align="right">{price}</TableCell>
+                <TableCell align="right">{quantity}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Div>
   )
 }
