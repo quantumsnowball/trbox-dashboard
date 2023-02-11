@@ -15,7 +15,8 @@ const Div = styled('div')`
 `;
 
 // connect to ws
-const DEV_DOMAIN = 'localhost:5000'
+const PORT_WS = 8000
+const DEV_DOMAIN = 'localhost'
 
 
 export default function TradeLog() {
@@ -24,8 +25,8 @@ export default function TradeLog() {
 
   // try to connect after first render
   useEffect(() => {
-    setSocket(() => new WebSocket(`ws://${process.env.NODE_ENV === 'production' ?
-      window.location.host : DEV_DOMAIN}`))
+    // const hostname = process.env.NODE_ENV === 'production' ? window.location.hostname : DEV_DOMAIN
+    setSocket(() => new WebSocket(`ws://${window.location.hostname}:${PORT_WS}`))
   }, [])
 
   // register handlers if connected
