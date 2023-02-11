@@ -5,6 +5,9 @@ const layoutSlice = createSlice({
   name: 'layout',
   initialState: {
     menuDrawer: {
+      pages: {
+        expanded: true,
+      },
       settings: {
         expanded: false,
       },
@@ -14,6 +17,9 @@ const layoutSlice = createSlice({
     }
   },
   reducers: {
+    togglePages: s => {
+      s.menuDrawer.pages.expanded = !s.menuDrawer.pages.expanded
+    },
     toggleSettings: s => {
       s.menuDrawer.settings.expanded = !s.menuDrawer.settings.expanded
     },
