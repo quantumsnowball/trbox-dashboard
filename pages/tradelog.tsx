@@ -16,7 +16,6 @@ const Div = styled('div')`
 
 // connect to ws
 const PORT_WS = 8000
-const DEV_DOMAIN = 'localhost'
 
 
 export default function TradeLog() {
@@ -32,8 +31,8 @@ export default function TradeLog() {
   // register handlers if connected
   useEffect(() => {
     socket?.addEventListener('message', msg => {
-      console.log(msg)
-      setMsgList(msgList => [...msgList, msg.data.toString()])
+      console.log(JSON.parse(msg.data))
+      setMsgList(msgList => [msg.data.toString(), ...msgList])
     })
   }, [socket])
 
