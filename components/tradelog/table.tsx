@@ -8,11 +8,10 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { contentTempActions } from '@/redux/slices/contentTemp';
+import { PORT_WS } from '@/common/constants';
 
 
 // connect to ws
-const PORT_WS = 8000
-
 
 export default function TradeLogTable() {
   const dispatch = useDispatch()

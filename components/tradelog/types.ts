@@ -1,4 +1,4 @@
-export type Tag = 'OrderResult' | 'EquityCurve'
+export type Tag = 'OrderResult' | 'EquityValue'
 export type WebSocketMessage = {
   tag: Tag,
   data: any
@@ -7,6 +7,12 @@ export type TaggedMessage<T> = {
   tag: Tag,
   data: T
 }
+
+export type EquityValue = {
+  timestamp: string
+  equity: number
+}
+export type EquityCurve = EquityValue[]
 
 export type OrderResult = {
   timestamp: string

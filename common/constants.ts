@@ -6,3 +6,4 @@ export const APP_TITLE = 'TRBOX'
 
 export const VERSION = require('../package.json').version
 
+export const PORT_WS = 8000
