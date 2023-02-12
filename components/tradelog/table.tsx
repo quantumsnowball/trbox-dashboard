@@ -1,27 +1,29 @@
-import { TaggedMessage, WebSocketMessage } from './types';
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { OrderResult, TaggedMessage, WebSocketMessage } from './types';
+import {
+  Paper, Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow,
+} from '@mui/material'
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { contentTempActions } from '@/redux/slices/contentTemp';
 
 
 // connect to ws
 const PORT_WS = 8000
 
-type OrderResult = {
-  timestamp: string
-  symbol: string
-  action: string
-  price: number
-  quantity: number
-}
-
 
 export default function TradeLogTable() {
+  const dispatch = useDispatch()
   const [socket, setSocket] = useState<WebSocket | null>(null)
-  const [tradelog, setTradelog] = useState([] as OrderResult[])
+  const [tradelog, addOrderResult] = [
+    useSelector((s: RootState) => s.contentTemp.tradelog),
+    (r: OrderResult) => dispatch(contentTempActions.addOrderResult(r)),
+  ]
 
   // try to connect after first render
   useEffect(() => {
-    // const hostname = process.env.NODE_ENV === 'production' ? window.location.hostname : DEV_DOMAIN
     setSocket(() => new WebSocket(`ws://${window.location.hostname}:${PORT_WS}`))
   }, [])
 
@@ -31,7 +33,7 @@ export default function TradeLogTable() {
       const msg: WebSocketMessage = JSON.parse(e.data)
       if (msg.tag === 'OrderResult') {
         const { data: orderResult } = msg as TaggedMessage<OrderResult>
-        setTradelog(tradelog => [orderResult, ...tradelog])
+        addOrderResult(orderResult)
       }
     })
   }, [socket])

@@ -5,6 +5,7 @@ import {
   FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER,
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import { contentTempReducer } from './slices/contentTemp'
 import { layoutReducer } from './slices/layout'
 import { layoutTempReducer } from './slices/layoutTemp'
 import { themeReducer } from './slices/theme'
@@ -12,6 +13,7 @@ import { themeReducer } from './slices/theme'
 
 // reducers
 const rootReducer = combineReducers({
+  contentTemp: contentTempReducer,
   layout: layoutReducer,
   layoutTemp: layoutTempReducer,
   theme: themeReducer
@@ -23,6 +25,7 @@ export const store = configureStore({
     key: 'root',
     storage: storage,
     blacklist: [
+      'contentTemp',
       'layoutTemp',
     ]
   }, rootReducer),

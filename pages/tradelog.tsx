@@ -1,7 +1,7 @@
-import { TaggedMessage, WebSocketMessage } from '../components/tradelog/types';
 import { Button, Paper, styled, Typography } from '@mui/material'
-import { useEffect, useState } from 'react';
 import TradeLogTable from '@/components/tradelog/table';
+import { useDispatch } from 'react-redux';
+import { contentTempActions } from '@/redux/slices/contentTemp';
 
 
 const Div = styled('div')`
@@ -16,19 +16,9 @@ const Div = styled('div')`
   align-items: center;
 `;
 
-// connect to ws
-const PORT_WS = 8000
-
-type OrderResult = {
-  timestamp: string
-  symbol: string
-  action: string
-  price: number
-  quantity: number
-}
-
-
 export default function TradeLog() {
+  const dispatch = useDispatch()
+  const clearTradeLog = () => dispatch(contentTempActions.clearTradelog())
   return (
     <Div>
       <Paper
@@ -40,7 +30,7 @@ export default function TradeLog() {
       </Paper>
       <Button
         variant='contained'
-        onClick={() => alert('gonna clear the table')}
+        onClick={clearTradeLog}
       >
         Clear
       </Button>
