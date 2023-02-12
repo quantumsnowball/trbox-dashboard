@@ -56,7 +56,7 @@ const MenuBar = () => {
 
   return (
     <>
-      <AppBar>
+      <AppBar position="static">
         <Toolbar sx={{ p: 1 }}>
           <MenuButton />
           <AppTitle />

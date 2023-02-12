@@ -1,7 +1,7 @@
 import { Button, styled, Typography } from "@mui/material";
 import Link from "next/link";
 
-const Div = styled('div')`
+const ContentDiv = styled('div')`
   height: 100%;
   display: flex;
   flex-flow: column nowrap;
@@ -11,13 +11,13 @@ const Div = styled('div')`
 
 export default function NotFound() {
   return (
-    <Div>
+    <ContentDiv id='content-div'>
       <Typography variant="h5">
         <code>{window.location.pathname}</code> not found
       </Typography>
       <Button variant="outlined">
         <Link href='/'> GO HOME </Link>
       </Button>
-    </Div>
+    </ContentDiv>
   )
 }

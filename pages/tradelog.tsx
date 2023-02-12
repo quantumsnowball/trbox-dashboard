@@ -2,32 +2,38 @@ import { Button, Paper, styled, Typography } from '@mui/material'
 import TradeLogTable from '@/components/tradelog/table';
 import { useDispatch } from 'react-redux';
 import { contentTempActions } from '@/redux/slices/contentTemp';
+import { FC } from 'react';
 
 
 const Div = styled('div')`
   /* take all vertical space */
-  height: 100%;
+  flex: 1 1 auto;
   /* single item each row */
   display: flex;
   flex-flow: column nowrap;
   /* align vertically */
-  justify-content: center;
+  justify-content: flex-start;
   /* align horizontally */
   align-items: center;
+  overflow: auto;
 `;
+
+const Title: FC<{ title: string }> = ({ title }) =>
+  <Paper
+    sx={{
+      width: '100%',
+      textAlign: 'center'
+    }}>
+    <Typography variant='h4'>{title}</Typography>
+  </Paper>
+
 
 export default function TradeLog() {
   const dispatch = useDispatch()
   const clearTradeLog = () => dispatch(contentTempActions.clearTradelog())
   return (
-    <Div>
-      <Paper
-        sx={{
-          width: '100%',
-          textAlign: 'center'
-        }}>
-        <Typography variant='h4'>Trade Log Section</Typography>
-      </Paper>
+    <>
+      <Title title='Trade Log Section' />
       <Button
         variant='contained'
         onClick={clearTradeLog}
@@ -35,7 +41,7 @@ export default function TradeLog() {
         Clear
       </Button>
       <TradeLogTable />
-    </Div>
+    </>
   )
 }
 

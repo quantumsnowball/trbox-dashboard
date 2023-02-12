@@ -2,9 +2,42 @@ import MenuBar from '@/components/MenuBar'
 import ReduxWrapper from '@/redux/wrapper'
 import '@/styles/globals.css'
 import ThemeWrapper from '@/styles/wrapper'
+import { styled } from '@mui/material'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+
+/*
+ * 
+ * AppDiv - 100% height
+ *   Header
+ *   MainDiv - 100% height
+ *     ContentDiv(s) - scrollable, 100% height
+ *       ItemDiv
+ *   Footer
+ *
+ */
+
+const AppDiv = styled('div')`
+  /* take all vertical space */
+  height: 100%;
+  /* single item each row */
+  display: flex;
+  flex-flow: column;
+`;
+
+const MainDiv = styled('div')`
+  /* take all vertical space */
+  flex: 1 1 auto;
+  /* single item each row */
+  display: flex;
+  flex-flow: column;
+  /* align vertically */
+  justify-content: flex-start;
+  /* align horizontally */
+  /* align-items: center;
+  overflow: auto; */
+`;
 
 function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -24,8 +57,12 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <ReduxWrapper>
       <ThemeWrapper>
-        <MenuBar />
-        <Component {...pageProps} />
+        <AppDiv id='app-div'>
+          <MenuBar />
+          <MainDiv id='content-div'>
+            <Component {...pageProps} />
+          </MainDiv>
+        </AppDiv>
       </ThemeWrapper>
     </ReduxWrapper>
   )
