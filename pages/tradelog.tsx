@@ -5,7 +5,7 @@ import { contentTempActions } from '@/redux/slices/contentTemp';
 import { FC } from 'react';
 
 
-const Div = styled('div')`
+const ContentDiv = styled('div')`
   /* take all vertical space */
   flex: 1 1 auto;
   /* single item each row */
@@ -15,6 +15,7 @@ const Div = styled('div')`
   justify-content: flex-start;
   /* align horizontally */
   align-items: center;
+
   overflow: auto;
 `;
 
@@ -32,7 +33,7 @@ export default function TradeLog() {
   const dispatch = useDispatch()
   const clearTradeLog = () => dispatch(contentTempActions.clearTradelog())
   return (
-    <>
+    <ContentDiv id='content-div'>
       <Title title='Trade Log Section' />
       <Button
         variant='contained'
@@ -41,7 +42,7 @@ export default function TradeLog() {
         Clear
       </Button>
       <TradeLogTable />
-    </>
+    </ContentDiv>
   )
 }
 

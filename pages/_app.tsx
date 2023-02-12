@@ -35,8 +35,9 @@ const MainDiv = styled('div')`
   /* align vertically */
   justify-content: flex-start;
   /* align horizontally */
-  /* align-items: center;
-  overflow: auto; */
+  /* align-items: center; */
+  /* scrollable  inside */
+  overflow: auto;
 `;
 
 function App({ Component, pageProps }: AppProps) {
@@ -59,7 +60,7 @@ function App({ Component, pageProps }: AppProps) {
       <ThemeWrapper>
         <AppDiv id='app-div'>
           <MenuBar />
-          <MainDiv id='content-div'>
+          <MainDiv id='main-div'>
             <Component {...pageProps} />
           </MainDiv>
         </AppDiv>
