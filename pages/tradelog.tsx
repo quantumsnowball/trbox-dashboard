@@ -1,3 +1,4 @@
+import { TaggedMessage, WebSocketMessage } from '../components/tradelog/types';
 import { Button, Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { useEffect, useState } from 'react';
 
@@ -17,7 +18,7 @@ const Div = styled('div')`
 // connect to ws
 const PORT_WS = 8000
 
-type TableData = {
+type OrderResult = {
   timestamp: string
   symbol: string
   action: string
@@ -25,9 +26,10 @@ type TableData = {
   quantity: number
 }
 
+
 export default function TradeLog() {
   const [socket, setSocket] = useState<WebSocket | null>(null)
-  const [msgList, setMsgList] = useState([] as TableData[])
+  const [tradelog, setTradelog] = useState([] as OrderResult[])
 
   // try to connect after first render
   useEffect(() => {
@@ -37,15 +39,12 @@ export default function TradeLog() {
 
   // register handlers if connected
   useEffect(() => {
-    socket?.addEventListener('message', msg => {
-      const d = JSON.parse(msg.data)
-      setMsgList(msgList => [{
-        timestamp: d.timestamp,
-        symbol: d.order.symbol,
-        action: d.action,
-        price: d.price,
-        quantity: d.quantity,
-      }, ...msgList])
+    socket?.addEventListener('message', (e: MessageEvent<string>) => {
+      const msg: WebSocketMessage = JSON.parse(e.data)
+      if (msg.tag === 'OrderResult') {
+        const { data: orderResult } = msg as TaggedMessage<OrderResult>
+        setTradelog(tradelog => [orderResult, ...tradelog])
+      }
     })
   }, [socket])
 
@@ -82,7 +81,7 @@ export default function TradeLog() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {msgList.map(({ timestamp, symbol, action, price, quantity }) => (
+            {tradelog.map(({ timestamp, symbol, action, price, quantity }) => (
               <TableRow
                 key={timestamp}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
