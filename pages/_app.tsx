@@ -4,6 +4,7 @@ import '@/styles/globals.css'
 import ThemeWrapper from '@/styles/wrapper'
 import { styled } from '@mui/material'
 import type { AppProps } from 'next/app'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
@@ -53,11 +54,18 @@ function App({ Component, pageProps }: AppProps) {
       console.log(err)
       router.replace('/notfound')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <ReduxWrapper>
       <ThemeWrapper>
+        <Head>
+          <title>Trbox - Console</title>
+          <meta name="description" content="Trbox Console" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
         <AppDiv id='app-div'>
           <MenuBar />
           <MainDiv id='main-div'>

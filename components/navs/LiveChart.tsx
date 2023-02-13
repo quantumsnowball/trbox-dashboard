@@ -126,6 +126,7 @@ const LiveChart = () => {
     return () => {
       console.debug('unmounted/refresh/exit')
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

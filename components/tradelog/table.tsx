@@ -41,6 +41,7 @@ export default function TradeLogTable() {
     if (router.pathname === '/tradelog') {
       // connect to socket if there is not already a connection
       if (!socket.current) {
+        console.debug('trying to connect')
         socket.current = new WebSocket(`ws://${window.location.hostname}:${PORT_WS}`)
         console.debug('ws connected')
         // request for history when connected
@@ -82,6 +83,7 @@ export default function TradeLogTable() {
       // BUG these cause problem when in react strict mode
       console.debug('unmounted/refresh/exit')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
