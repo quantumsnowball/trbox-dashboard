@@ -1,4 +1,4 @@
-import { OrderResult, TaggedMessage, WebSocketMessage } from './types';
+import { OrderResult, TaggedMessage, TradeLog, WebSocketMessage } from './types';
 import {
   Paper, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow,
@@ -18,9 +18,10 @@ export default function TradeLogTable() {
   const router = useRouter()
   const dispatch = useDispatch()
   const socket = useRef(null as WebSocket | null)
-  const [tradelog, addOrderResult, clearTradelog] = [
+  const [tradelog, addOrderResult, setTradelog, clearTradelog] = [
     useSelector((s: RootState) => s.contentTemp.tradelog),
     (r: OrderResult) => dispatch(contentTempActions.addOrderResult(r)),
+    (l: TradeLog) => dispatch(contentTempActions.setTradelog(l)),
     () => dispatch(contentTempActions.clearTradelog()),
   ]
 
@@ -42,6 +43,10 @@ export default function TradeLogTable() {
       if (!socket.current) {
         socket.current = new WebSocket(`ws://${window.location.hostname}:${PORT_WS}`)
         console.debug('ws connected')
+        // request for history when connected
+        socket.current.addEventListener('open', () => {
+          socket.current?.send('TradeLogHistoryRequest')
+        })
         // start to listen to message 
         socket.current.addEventListener('message', (e: MessageEvent<string>) => {
           const msg: WebSocketMessage = JSON.parse(e.data)
@@ -49,6 +54,11 @@ export default function TradeLogTable() {
             const { data: orderResult } = msg as TaggedMessage<OrderResult>
             addOrderResult(orderResult)
             console.debug(msg.tag)
+          }
+          else if (msg.tag === 'TradeLogHistory') {
+            const { data: tradeLogHistory } = msg as TaggedMessage<TradeLog>
+            console.debug(`tradelog history length: ${tradeLogHistory.length}`)
+            setTradelog(tradeLogHistory)
           }
         })
         // when comp mounted

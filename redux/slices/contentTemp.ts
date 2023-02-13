@@ -15,6 +15,9 @@ const contentTempSlice = createSlice({
     addOrderResult: (s, a: PayloadAction<OrderResult>) => {
       s.tradelog.unshift(a.payload)
     },
+    setTradelog: (s, a: PayloadAction<TradeLog>) => {
+      s.tradelog = a.payload
+    },
     clearTradelog: s => { s.tradelog = [] }
   }
 })

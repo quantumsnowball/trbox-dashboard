@@ -84,6 +84,7 @@ const LiveChart = () => {
       if (!socket.current) {
         socket.current = new WebSocket(`ws://${window.location.hostname}:${PORT_WS}`)
         console.debug('ws connected')
+        // request for history when connected
         socket.current.addEventListener('open', () => {
           socket.current?.send('EquityValueHistoryRequest')
         })
@@ -99,7 +100,7 @@ const LiveChart = () => {
             })
           } else if (msg.tag === 'EquityCurveHistory') {
             const { data: equityValueHistory } = msg as TaggedMessage<EquityCurve>
-            console.debug(`history length: ${equityValueHistory.length}`)
+            console.debug(`equity curve history length: ${equityValueHistory.length}`)
             initialData.current = equityValueHistory.map(
               ({ timestamp, equity }) => ({
                 time: timestamp.split('T')[0],

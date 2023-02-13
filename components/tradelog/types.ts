@@ -1,4 +1,4 @@
-export type Tag = 'OrderResult' | 'EquityValue' | 'EquityCurveHistory'
+export type Tag = 'OrderResult' | 'TradeLogHistory' | 'EquityValue' | 'EquityCurveHistory'
 export type WebSocketMessage = {
   tag: Tag,
   data: any
