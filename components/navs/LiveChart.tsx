@@ -5,6 +5,7 @@ import {
   SeriesDataItemTypeMap,
   SeriesType,
   ISeriesApi,
+  IChartApi,
 } from 'lightweight-charts';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
@@ -16,6 +17,7 @@ const LiveChart = () => {
   const socket = useRef(null as WebSocket | null)
   const ctnRef = useRef<HTMLDivElement | null>(null)
   const series = useRef<ISeriesApi<'Area'> | null>(null)
+  const chart = useRef<IChartApi | null>(null)
   const initialData = useRef([
     // { time: '2018-12-30', value: 22.68 },
     // { time: '2018-12-31', value: 22.67 },
@@ -23,33 +25,36 @@ const LiveChart = () => {
 
   // when data is being set
   const onDataReady = () => {
-    // create chart
-    const chart = createChart(ctnRef?.current ? ctnRef.current : '',
-      {
-        layout: {
-          background: {
-            type: ColorType.Solid,
-            color: 'white',
+    // create chart if not already exists
+
+    if (!chart.current) {
+      chart.current = createChart(ctnRef?.current ? ctnRef.current : '',
+        {
+          layout: {
+            background: {
+              type: ColorType.Solid,
+              color: 'white',
+            },
+            textColor: 'black',
           },
-          textColor: 'black',
+          width: ctnRef?.current?.clientWidth,
+          height: 300,
         },
-        width: ctnRef?.current?.clientWidth,
-        height: 300,
-      },
-    );
-    console.debug('chart created')
+      );
+      console.debug('chart created')
+    }
     // add data
-    series.current = chart.addAreaSeries({
+    series.current = chart.current?.addAreaSeries({
       lineColor: '#2962FF',
       topColor: '#2962FF',
       bottomColor: 'rgba(41, 98, 255, 0.28)'
     });
-    series.current.setData(initialData.current);
-    chart.timeScale().fitContent();
+    series.current?.setData(initialData.current);
+    chart.current.timeScale().fitContent();
     console.debug('data injected')
     // add event listener
     const handleResize = () => {
-      chart.applyOptions({
+      chart.current?.applyOptions({
         width: ctnRef?.current?.clientWidth
       });
     };
@@ -57,7 +62,7 @@ const LiveChart = () => {
     // clean up
     return () => {
       window.removeEventListener('resize', handleResize);
-      chart.remove();
+      chart.current?.remove();
       console.debug('chart removed')
     };
   }
@@ -100,14 +105,8 @@ const LiveChart = () => {
                 time: timestamp.split('T')[0],
                 value: equity
               }))
+
             onDataReady()
-            // lab: try to set initialData
-            // initialData.current = [
-            //   { time: '2018-12-30', value: 22.68 },
-            //   { time: '2018-12-31', value: 22.67 },
-            // ]
-            // series.current?.setData(initialData.current)
-            // console.warn('setting initialData')
           }
         })
         // when comp mounted
