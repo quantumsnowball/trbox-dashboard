@@ -3,7 +3,7 @@ import {
   Paper, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow,
 } from '@mui/material'
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';

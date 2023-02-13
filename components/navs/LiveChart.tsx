@@ -8,65 +8,77 @@ import {
   SeriesType,
   ISeriesApi,
 } from 'lightweight-charts';
-import React, { FC, PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { EquityValue, TaggedMessage, WebSocketMessage } from '../tradelog/types';
 
 
-export const SAMPLE_DATA = [
-  // { time: '2018-12-30', value: 22.68 },
-  // { time: '2018-12-31', value: 22.67 },
-];
-
-
-export const SAMPLE_COLOR = {
-  backgroundColor: 'white',
-  lineColor: '#2962FF',
-  textColor: 'black',
-  areaTopColor: '#2962FF',
-  areaBottomColor: 'rgba(41, 98, 255, 0.28)',
-};
-
-
-type ChartComponentProps = {
-  data: SeriesDataItemTypeMap[SeriesType][],
-  colors: {
-    backgroundColor: string
-    lineColor: string
-    textColor: string
-    areaTopColor: string
-    areaBottomColor: string
-  }
-} & PropsWithChildren
-
-const LiveChart: FC<ChartComponentProps> = (props) => {
+const LiveChart = () => {
+  const router = useRouter()
   const dispatch = useDispatch()
-  const [socket, setSocket] = useState<WebSocket | null>(null)
+  const socket = useRef(null as WebSocket | null)
   const [equityCurve, addEquityValue] = [
     useSelector((s: RootState) => s.contentTemp.tradelog),
     (v: EquityValue) => dispatch(contentTempActions.addEquityValue(v)),
   ]
+  const ctnRef = useRef<HTMLDivElement | null>(null)
+  const series = useRef<ISeriesApi<'Area'> | null>(null)
 
-  const {
-    data,
-    colors: {
-      backgroundColor,
-      lineColor,
-      textColor,
-      areaTopColor,
-      areaBottomColor,
+  const backgroundColor = 'white'
+  const lineColor = '#2962FF'
+  const textColor = 'black'
+  const areaTopColor = '#2962FF'
+  const areaBottomColor = 'rgba(41, 98, 255, 0.28)'
+
+  const data = [
+    // { time: '2018-12-30', value: 22.68 },
+    // { time: '2018-12-31', value: 22.67 },
+  ] as SeriesDataItemTypeMap[SeriesType][]
+
+  // when page navigate away
+  const onPageLeave = (url: string) => {
+    // only when leave from /tradelog
+    if (url !== '/navs') {
+      socket.current?.close()
+      console.debug('ws disconnected')
     }
-  } = props;
+  }
 
-  const ctnRef = useRef<HTMLDivElement | null>(null);
-  let series: ISeriesApi<'Area'>
+  const onPageEnter = () => {
+    // when enter pae /tradelog
+    if (router.pathname === '/navs') {
+      // connect to socket if there is not already a connection
+      if (!socket.current) {
+        socket.current = new WebSocket(`ws://${window.location.hostname}:${PORT_WS}`)
+        console.debug('ws connected')
+        // start to listen to message 
+        socket.current.addEventListener('message', (e: MessageEvent<string>) => {
+          const msg: WebSocketMessage = JSON.parse(e.data)
+          if (msg.tag === 'EquityValue') {
+            const { data: equityValue } = msg as TaggedMessage<EquityValue>
+            addEquityValue(equityValue)
+            console.debug(msg.tag)
+            series.current?.update({
+              time: equityValue.timestamp.split('T')[0],
+              value: equityValue.equity
+            })
+          }
+        })
+        // when comp mounted
+        router.events.on('routeChangeStart', onPageLeave)
+        console.debug('listening page leave event')
+      } else {
+        console.debug('using existing socket')
+      }
+    }
+  }
 
   // after comp mount 
   useEffect(
     () => {
       // create chart
-      const chart = createChart(
-        ctnRef?.current ? ctnRef.current : '',
+      const chart = createChart(ctnRef?.current ? ctnRef.current : '',
         {
           layout: {
             background: {
@@ -83,14 +95,14 @@ const LiveChart: FC<ChartComponentProps> = (props) => {
       chart.timeScale().fitContent();
 
       // add data
-      series = chart.addAreaSeries({
+      series.current = chart.addAreaSeries({
         lineColor,
         topColor: areaTopColor,
         bottomColor: areaBottomColor
       });
-      series.setData(data);
+      series.current.setData(data);
 
-      // event listener
+      // add event listener
       const handleResize = () => {
         chart.applyOptions({
           width: ctnRef?.current?.clientWidth
@@ -99,31 +111,19 @@ const LiveChart: FC<ChartComponentProps> = (props) => {
       window.addEventListener('resize', handleResize);
 
 
-
-
-      const socket = new WebSocket(`ws://${window.location.hostname}:${PORT_WS}`)
-
-      socket.addEventListener('message', (e: MessageEvent<string>) => {
-        const msg: WebSocketMessage = JSON.parse(e.data)
-        if (msg.tag === 'EquityValue') {
-          const { data: equityValue } = msg as TaggedMessage<EquityValue>
-          addEquityValue(equityValue)
-          console.log(equityValue)
-          series?.update({
-            time: equityValue.timestamp.split('T')[0],
-            value: equityValue.equity
-          })
-        }
-      })
+      // 
+      // when mounted
+      onPageEnter()
 
       // clean up
       return () => {
         window.removeEventListener('resize', handleResize);
 
         chart.remove();
+        console.debug('unmounted/refresh/exit')
       };
     },
-    [data, backgroundColor, lineColor, textColor, areaTopColor, areaBottomColor]
+    []
   );
 
   return (
