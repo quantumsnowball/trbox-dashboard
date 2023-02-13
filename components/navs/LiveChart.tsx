@@ -9,7 +9,7 @@ import {
 } from 'lightweight-charts';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
-import { EquityCurve, EquityValue, TaggedMessage, WebSocketMessage } from '../tradelog/types';
+import { EquityCurve, EquityValue, TaggedMessage, WebSocketMessage } from '../tradelog/types'; // TODO
 
 
 const LiveChart = () => {
@@ -69,7 +69,7 @@ const LiveChart = () => {
 
   // when page navigate away
   const onPageLeave = (url: string) => {
-    // only when leave from /tradelog
+    // only when leave from /navs
     if (url !== '/navs') {
       socket.current?.close()
       console.debug('ws disconnected')
@@ -78,7 +78,7 @@ const LiveChart = () => {
 
   // when page enter into
   const onPageEnter = () => {
-    // when enter pae /tradelog
+    // when enter pae /navs
     if (router.pathname === '/navs') {
       // connect to socket if there is not already a connection
       if (!socket.current) {
@@ -99,13 +99,12 @@ const LiveChart = () => {
             })
           } else if (msg.tag === 'EquityCurveHistory') {
             const { data: equityValueHistory } = msg as TaggedMessage<EquityCurve>
-            console.log(equityValueHistory)
+            console.debug(`history length: ${equityValueHistory.length}`)
             initialData.current = equityValueHistory.map(
               ({ timestamp, equity }) => ({
                 time: timestamp.split('T')[0],
                 value: equity
               }))
-
             onDataReady()
           }
         })
