@@ -24,6 +24,10 @@ const LiveChart = () => {
   ]
   const ctnRef = useRef<HTMLDivElement | null>(null)
   const series = useRef<ISeriesApi<'Area'> | null>(null)
+  const data = useRef([
+    // { time: '2018-12-30', value: 22.68 },
+    // { time: '2018-12-31', value: 22.67 },
+  ] as SeriesDataItemTypeMap[SeriesType][])
 
   const backgroundColor = 'white'
   const lineColor = '#2962FF'
@@ -31,10 +35,6 @@ const LiveChart = () => {
   const areaTopColor = '#2962FF'
   const areaBottomColor = 'rgba(41, 98, 255, 0.28)'
 
-  const data = [
-    // { time: '2018-12-30', value: 22.68 },
-    // { time: '2018-12-31', value: 22.67 },
-  ] as SeriesDataItemTypeMap[SeriesType][]
 
   // when page navigate away
   const onPageLeave = (url: string) => {
@@ -75,56 +75,52 @@ const LiveChart = () => {
   }
 
   // after comp mount 
-  useEffect(
-    () => {
-      // create chart
-      const chart = createChart(ctnRef?.current ? ctnRef.current : '',
-        {
-          layout: {
-            background: {
-              type: ColorType.Solid,
-              color: backgroundColor
-            },
-            textColor,
+  useEffect(() => {
+    // create chart
+    const chart = createChart(ctnRef?.current ? ctnRef.current : '',
+      {
+        layout: {
+          background: {
+            type: ColorType.Solid,
+            color: backgroundColor
           },
-          width: ctnRef?.current?.clientWidth,
-          height: 300,
+          textColor,
         },
-      );
+        width: ctnRef?.current?.clientWidth,
+        height: 300,
+      },
+    );
 
-      chart.timeScale().fitContent();
+    chart.timeScale().fitContent();
 
-      // add data
-      series.current = chart.addAreaSeries({
-        lineColor,
-        topColor: areaTopColor,
-        bottomColor: areaBottomColor
+    // add data
+    series.current = chart.addAreaSeries({
+      lineColor,
+      topColor: areaTopColor,
+      bottomColor: areaBottomColor
+    });
+    series.current.setData(data.current);
+
+    // add event listener
+    const handleResize = () => {
+      chart.applyOptions({
+        width: ctnRef?.current?.clientWidth
       });
-      series.current.setData(data);
-
-      // add event listener
-      const handleResize = () => {
-        chart.applyOptions({
-          width: ctnRef?.current?.clientWidth
-        });
-      };
-      window.addEventListener('resize', handleResize);
+    };
+    window.addEventListener('resize', handleResize);
 
 
-      // 
-      // when mounted
-      onPageEnter()
+    // 
+    // when mounted
+    onPageEnter()
 
-      // clean up
-      return () => {
-        window.removeEventListener('resize', handleResize);
-
-        chart.remove();
-        console.debug('unmounted/refresh/exit')
-      };
-    },
-    []
-  );
+    // clean up
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      chart.remove();
+      console.debug('unmounted/refresh/exit')
+    };
+  }, []);
 
   return (
     <div ref={ctnRef} />
