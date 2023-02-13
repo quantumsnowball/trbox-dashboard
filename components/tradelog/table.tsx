@@ -18,11 +18,11 @@ export default function TradeLogTable() {
   const router = useRouter()
   const dispatch = useDispatch()
   const socket = useRef(null as WebSocket | null)
-  const [tradelog, addOrderResult, setTradelog, clearTradelog] = [
+  const [tradelog, addOrderResult, setTradeLog, clearTradeLog] = [
     useSelector((s: RootState) => s.contentTemp.tradelog),
     (r: OrderResult) => dispatch(contentTempActions.addOrderResult(r)),
-    (l: TradeLog) => dispatch(contentTempActions.setTradelog(l)),
-    () => dispatch(contentTempActions.clearTradelog()),
+    (l: TradeLog) => dispatch(contentTempActions.setTradeLog(l)),
+    () => dispatch(contentTempActions.clearTradeLog()),
   ]
 
   // when page navigate away
@@ -31,7 +31,7 @@ export default function TradeLogTable() {
     if (url !== '/tradelog') {
       socket.current?.close()
       console.debug('ws disconnected')
-      clearTradelog()
+      clearTradeLog()
     }
   }
 
@@ -59,7 +59,7 @@ export default function TradeLogTable() {
           else if (msg.tag === 'TradeLogHistory') {
             const { data: tradeLogHistory } = msg as TaggedMessage<TradeLog>
             console.debug(`tradelog history length: ${tradeLogHistory.length}`)
-            setTradelog(tradeLogHistory)
+            setTradeLog(tradeLogHistory)
           }
         })
         // when comp mounted

@@ -31,7 +31,7 @@ const Title: FC<{ title: string }> = ({ title }) =>
 
 export default function TradeLog() {
   const dispatch = useDispatch()
-  const clearTradeLog = () => dispatch(contentTempActions.clearTradelog())
+  const clearTradeLog = () => dispatch(contentTempActions.clearTradeLog())
   return (
     <ContentDiv id='content-div'>
       <Title title='Trade Log Section' />
