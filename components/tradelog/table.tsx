@@ -3,27 +3,53 @@ import {
   Paper, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow,
 } from '@mui/material'
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { contentTempActions } from '@/redux/slices/contentTemp';
 import { PORT_WS } from '@/common/constants';
+import { useRouter } from 'next/router';
 
 
 // connect to ws
 
 export default function TradeLogTable() {
+  const router = useRouter()
   const dispatch = useDispatch()
   const [socket, setSocket] = useState<WebSocket | null>(null)
-  const [tradelog, addOrderResult] = [
+  const socketRef = useRef(socket)
+  const [tradelog, addOrderResult, clearTradelog] = [
     useSelector((s: RootState) => s.contentTemp.tradelog),
     (r: OrderResult) => dispatch(contentTempActions.addOrderResult(r)),
+    () => dispatch(contentTempActions.clearTradelog()),
   ]
 
-  // try to connect after first render
+  // reference the latest socket state
+  socketRef.current = socket
+
+  // when page enter
   useEffect(() => {
-    setSocket(() => new WebSocket(`ws://${window.location.hostname}:${PORT_WS}`))
+    // when enter page /tradelog
+    if (router.pathname === '/tradelog') {
+      setSocket(() => new WebSocket(`ws://${window.location.hostname}:${PORT_WS}`))
+    }
+    // when page navigate away
+    const on_routeChange = (url: string) => {
+      // only when leave from /tradelog
+      socketRef.current?.close()
+      clearTradelog()
+    }
+
+    // when comp mounted
+    router.events.on('routeChangeStart', on_routeChange)
+
+    // when comp unmounted
+    return () => {
+      // when app exit
+      socketRef.current?.close()
+      router.events.off('routeChangeStart', on_routeChange)
+    }
   }, [])
 
   // register handlers if connected
