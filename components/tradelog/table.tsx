@@ -24,25 +24,22 @@ export default function TradeLogTable() {
     () => dispatch(contentTempActions.clearTradelog()),
   ]
 
-  // when page enter
-  useEffect(() => {
-    // when page navigate away
-    const on_routeChange = (url: string) => {
-      // only when leave from /tradelog
-      if (url !== '/tradelog') {
-        socket.current?.close()
-        console.debug('ws disconnected')
-        clearTradelog()
-      }
+  // when page navigate away
+  const onPageLeave = (url: string) => {
+    // only when leave from /tradelog
+    if (url !== '/tradelog') {
+      socket.current?.close()
+      console.debug('ws disconnected')
+      clearTradelog()
     }
-
-    // when enter page /tradelog
+  }
+  const onPageEnter = () => {
+    // when enter pae /tradelog
     if (router.pathname === '/tradelog') {
       // connect to socket if there is not already a connection
       if (!socket.current) {
         socket.current = new WebSocket(`ws://${window.location.hostname}:${PORT_WS}`)
         console.debug('ws connected')
-        socket.current.onclose = () => console.debug('onclose: closing connection')
         // start to listen to message 
         socket.current.addEventListener('message', (e: MessageEvent<string>) => {
           const msg: WebSocketMessage = JSON.parse(e.data)
@@ -53,20 +50,25 @@ export default function TradeLogTable() {
           }
         })
         // when comp mounted
-        router.events.on('routeChangeStart', on_routeChange)
-        console.debug('monitoring page leave')
+        router.events.on('routeChangeStart', onPageLeave)
+        console.debug('listening page leave event')
       } else {
         console.debug('using existing socket')
       }
     }
+  }
 
-    // when comp unmounted
+  // when page enter
+  useEffect(() => {
+    // when mounted
+    onPageEnter()
+
+    // when unmounted/refresh/exit
     return () => {
-      // when app exit
       // socketRef.current?.close()
       // router.events.off('routeChangeStart', on_routeChange)
       // BUG these cause problem when in react strict mode
-      console.debug('disconnected on comp unmounted')
+      console.debug('unmounted/refresh/exit')
     }
   }, [])
 
