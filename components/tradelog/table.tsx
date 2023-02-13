@@ -33,6 +33,8 @@ export default function TradeLogTable() {
       clearTradelog()
     }
   }
+
+  // when page enter into
   const onPageEnter = () => {
     // when enter pae /tradelog
     if (router.pathname === '/tradelog') {

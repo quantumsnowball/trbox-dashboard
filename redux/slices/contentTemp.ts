@@ -5,13 +5,13 @@ import { EquityCurve, EquityValue, OrderResult, TradeLog } from '../../component
 const contentTempSlice = createSlice({
   name: 'contentTemp',
   initialState: {
-    equityCurve: [] as EquityCurve,
+    // equityCurve: [] as EquityCurve,
     tradelog: [] as TradeLog
   },
   reducers: {
-    addEquityValue: (s, a: PayloadAction<EquityValue>) => {
-      s.equityCurve.push(a.payload)
-    },
+    // addEquityValue: (s, a: PayloadAction<EquityValue>) => {
+    //   s.equityCurve.push(a.payload)
+    // },
     addOrderResult: (s, a: PayloadAction<OrderResult>) => {
       s.tradelog.unshift(a.payload)
     },
