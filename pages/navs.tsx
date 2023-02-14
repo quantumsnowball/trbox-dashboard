@@ -1,4 +1,5 @@
 import LiveChart from '@/components/navs/LiveChart'
+import TitleSection from '@/components/navs/Title'
 import { Paper, Typography } from '@mui/material'
 
 
@@ -9,7 +10,7 @@ export default function Navs() {
         width: '100%',
         textAlign: 'center'
       }}>
-      <Typography variant='h4'>Equity Curve Section</Typography>
+      <TitleSection />
       <LiveChart />
     </Paper>
   )

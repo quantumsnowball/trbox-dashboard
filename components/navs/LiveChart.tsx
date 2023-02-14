@@ -1,4 +1,6 @@
 import { PORT_WS } from '@/common/constants';
+import { contentTempActions } from '@/redux/slices/contentTemp';
+import { styled } from '@mui/material';
 import {
   createChart,
   ColorType,
@@ -9,10 +11,17 @@ import {
 } from 'lightweight-charts';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import { EquityCurve, EquityValue, TaggedMessage, WebSocketMessage } from '../tradelog/types'; // TODO
 
 
+const ChartDiv = styled('div')`
+  /* take all vertical space */
+  margin: 5px;
+`;
+
 const LiveChart = () => {
+  const dispatch = useDispatch()
   const router = useRouter()
   const socket = useRef(null as WebSocket | null)
   const ctnRef = useRef<HTMLDivElement | null>(null)
@@ -22,6 +31,9 @@ const LiveChart = () => {
     // { time: '2018-12-30', value: 22.68 },
     // { time: '2018-12-31', value: 22.67 },
   ] as SeriesDataItemTypeMap[SeriesType][])
+
+  // actions
+  const setEquityValue = (v: number) => dispatch(contentTempActions.setEquityValue(v))
 
   // when data is being set
   const onDataReady = () => {
@@ -110,6 +122,7 @@ const LiveChart = () => {
           time: equityValue.timestamp.split('T')[0],
           value: equityValue.equity
         })
+        setEquityValue(equityValue.equity)
       } else if (msg.tag === 'EquityCurveHistory') {
         const { data: equityValueHistory } = msg as TaggedMessage<EquityCurve>
         console.debug(`equity curve history length: ${equityValueHistory.length}`)
@@ -138,7 +151,7 @@ const LiveChart = () => {
   }, []);
 
   return (
-    <div ref={ctnRef} />
+    <ChartDiv ref={ctnRef} />
   );
 };
 

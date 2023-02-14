@@ -25,7 +25,7 @@ const Title: FC<{ title: string }> = ({ title }) =>
       width: '100%',
       textAlign: 'center'
     }}>
-    <Typography variant='h4'>{title}</Typography>
+    <Typography variant='h5'>{title}</Typography>
   </Paper>
 
 
@@ -34,7 +34,7 @@ export default function TradeLog() {
   const clearTradeLog = () => dispatch(contentTempActions.clearTradeLog())
   return (
     <ContentDiv id='content-div'>
-      <Title title='Trade Log Section' />
+      <Title title='Trade Log' />
       <Button
         variant='contained'
         onClick={clearTradeLog}

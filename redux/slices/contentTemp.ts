@@ -5,13 +5,21 @@ import { OrderResult, TradeLog } from '../../components/tradelog/types'
 const contentTempSlice = createSlice({
   name: 'contentTemp',
   initialState: {
-    // equityCurve: [] as EquityCurve,
+    equityCurve: {
+      value: null as string | null
+    },
     tradelog: [] as TradeLog
   },
   reducers: {
-    // addEquityValue: (s, a: PayloadAction<EquityValue>) => {
-    //   s.equityCurve.push(a.payload)
-    // },
+    setEquityValue: (s, a: PayloadAction<number>) => {
+      const text = a.payload.toLocaleString(
+        'en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 2
+      })
+      s.equityCurve.value = text
+    },
     addOrderResult: (s, a: PayloadAction<OrderResult>) => {
       s.tradelog.unshift(a.payload)
     },
