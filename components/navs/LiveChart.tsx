@@ -86,43 +86,44 @@ const LiveChart = () => {
   // when page enter into
   const onPageEnter = () => {
     // when enter pae /navs
-    if (router.pathname === '/navs') {
-      // connect to socket if there is not already a connection
-      if (!socket.current) {
-        socket.current = new WebSocket(`ws://${window.location.hostname}:${PORT_WS}`)
-        console.debug('ws connected')
-        // request for history when connected
-        socket.current.addEventListener('open', () => {
-          socket.current?.send('EquityValueHistoryRequest')
-        })
-        // start to listen to message 
-        socket.current.addEventListener('message', (e: MessageEvent<string>) => {
-          const msg: WebSocketMessage = JSON.parse(e.data)
-          if (msg.tag === 'EquityValue') {
-            const { data: equityValue } = msg as TaggedMessage<EquityValue>
-            console.debug(msg.tag)
-            series.current?.update({
-              time: equityValue.timestamp.split('T')[0],
-              value: equityValue.equity
-            })
-          } else if (msg.tag === 'EquityCurveHistory') {
-            const { data: equityValueHistory } = msg as TaggedMessage<EquityCurve>
-            console.debug(`equity curve history length: ${equityValueHistory.length}`)
-            initialData.current = equityValueHistory.map(
-              ({ timestamp, equity }) => ({
-                time: timestamp.split('T')[0],
-                value: equity
-              }))
-            onDataReady()
-          }
-        })
-        // when comp mounted
-        router.events.on('routeChangeStart', onPageLeave)
-        console.debug('listening page leave event')
-      } else {
-        console.debug('using existing socket')
-      }
+    if (router.pathname !== '/navs')
+      return
+    // connect to socket if there is not already a connection
+    if (socket.current) {
+      console.debug('using existing socket')
+      return
     }
+    // create socket
+    socket.current = new WebSocket(`ws://${window.location.hostname}:${PORT_WS}`)
+    console.debug('ws connected')
+    // request for history when connected
+    socket.current.addEventListener('open', () => {
+      socket.current?.send('EquityValueHistoryRequest')
+    })
+    // start to listen to message 
+    socket.current.addEventListener('message', (e: MessageEvent<string>) => {
+      const msg: WebSocketMessage = JSON.parse(e.data)
+      if (msg.tag === 'EquityValue') {
+        const { data: equityValue } = msg as TaggedMessage<EquityValue>
+        console.debug(msg.tag)
+        series.current?.update({
+          time: equityValue.timestamp.split('T')[0],
+          value: equityValue.equity
+        })
+      } else if (msg.tag === 'EquityCurveHistory') {
+        const { data: equityValueHistory } = msg as TaggedMessage<EquityCurve>
+        console.debug(`equity curve history length: ${equityValueHistory.length}`)
+        initialData.current = equityValueHistory.map(
+          ({ timestamp, equity }) => ({
+            time: timestamp.split('T')[0],
+            value: equity
+          }))
+        onDataReady()
+      }
+    })
+    // when comp mounted
+    router.events.on('routeChangeStart', onPageLeave)
+    console.debug('listening page leave event')
   }
 
   // after comp mount 

@@ -38,37 +38,37 @@ export default function TradeLogTable() {
   // when page enter into
   const onPageEnter = () => {
     // when enter pae /tradelog
-    if (router.pathname === '/tradelog') {
-      // connect to socket if there is not already a connection
-      if (!socket.current) {
-        console.debug('trying to connect')
-        socket.current = new WebSocket(`ws://${window.location.hostname}:${PORT_WS}`)
-        console.debug('ws connected')
-        // request for history when connected
-        socket.current.addEventListener('open', () => {
-          socket.current?.send('TradeLogHistoryRequest')
-        })
-        // start to listen to message 
-        socket.current.addEventListener('message', (e: MessageEvent<string>) => {
-          const msg: WebSocketMessage = JSON.parse(e.data)
-          if (msg.tag === 'OrderResult') {
-            const { data: orderResult } = msg as TaggedMessage<OrderResult>
-            addOrderResult(orderResult)
-            console.debug(msg.tag)
-          }
-          else if (msg.tag === 'TradeLogHistory') {
-            const { data: tradeLogHistory } = msg as TaggedMessage<TradeLog>
-            console.debug(`tradelog history length: ${tradeLogHistory.length}`)
-            setTradeLog(tradeLogHistory)
-          }
-        })
-        // when comp mounted
-        router.events.on('routeChangeStart', onPageLeave)
-        console.debug('listening page leave event')
-      } else {
-        console.debug('using existing socket')
-      }
+    if (router.pathname !== '/tradelog')
+      return
+    // connect to socket if there is not already a connection
+    if (socket.current) {
+      console.debug('using existing socket')
+      return
     }
+    // create socket
+    socket.current = new WebSocket(`ws://${window.location.hostname}:${PORT_WS}`)
+    console.debug('ws connected')
+    // request for history when connected
+    socket.current.addEventListener('open', () => {
+      socket.current?.send('TradeLogHistoryRequest')
+    })
+    // start to listen to message 
+    socket.current.addEventListener('message', (e: MessageEvent<string>) => {
+      const msg: WebSocketMessage = JSON.parse(e.data)
+      if (msg.tag === 'OrderResult') {
+        const { data: orderResult } = msg as TaggedMessage<OrderResult>
+        addOrderResult(orderResult)
+        console.debug(msg.tag)
+      }
+      else if (msg.tag === 'TradeLogHistory') {
+        const { data: tradeLogHistory } = msg as TaggedMessage<TradeLog>
+        console.debug(`tradelog history length: ${tradeLogHistory.length}`)
+        setTradeLog(tradeLogHistory)
+      }
+    })
+    // when comp mounted
+    router.events.on('routeChangeStart', onPageLeave)
+    console.debug('listening page leave event')
   }
 
   // when page enter
