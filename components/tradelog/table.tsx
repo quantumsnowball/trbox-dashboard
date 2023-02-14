@@ -1,7 +1,7 @@
-import { OrderResult, TaggedMessage, TradeLog, WebSocketMessage } from './types';
+import { OrderResult, TaggedMessage, TradeLog, WebSocketMessage } from './../../common/types';
 import {
   Paper, Table, TableBody, TableCell,
-  TableContainer, TableHead, TableRow,
+  TableContainer, TableHead, TableRow
 } from '@mui/material'
 import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';

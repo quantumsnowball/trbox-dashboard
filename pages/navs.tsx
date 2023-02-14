@@ -1,6 +1,6 @@
 import LiveChart from '@/components/navs/LiveChart'
 import TitleSection from '@/components/navs/Title'
-import { Paper, Typography } from '@mui/material'
+import { Paper } from '@mui/material'
 
 
 export default function Navs() {

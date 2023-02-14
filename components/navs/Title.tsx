@@ -10,7 +10,7 @@ const TitleSection = () => {
       <Typography variant='h5'>Equity Curve</Typography>
       {
         equityValue ?
-          <Typography variant='body'>
+          <Typography variant='h6'>
             {equityValue}
           </Typography>
           : null

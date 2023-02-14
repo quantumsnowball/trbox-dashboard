@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { OrderResult, TradeLog } from '../../components/tradelog/types'
+import { OrderResult, TradeLog } from '../../common/types'
 
 
 const contentTempSlice = createSlice({

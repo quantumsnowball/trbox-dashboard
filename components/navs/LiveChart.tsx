@@ -12,7 +12,7 @@ import {
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { EquityCurve, EquityValue, TaggedMessage, WebSocketMessage } from '../tradelog/types'; // TODO
+import { EquityCurve, EquityValue, TaggedMessage, WebSocketMessage } from '../../common/types'; // TODO
 
 
 const ChartDiv = styled('div')`
