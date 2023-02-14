@@ -25,33 +25,40 @@ const LiveChart = () => {
 
   // when data is being set
   const onDataReady = () => {
-    // create chart if not already exists
-
-    if (!chart.current) {
-      chart.current = createChart(ctnRef?.current ? ctnRef.current : '',
-        {
-          layout: {
-            background: {
-              type: ColorType.Solid,
-              color: 'white',
-            },
-            textColor: 'black',
+    // create chart only if not already exists
+    if (chart.current)
+      return
+    // create chart
+    chart.current = createChart(ctnRef?.current ? ctnRef.current : '',
+      {
+        layout: {
+          background: {
+            type: ColorType.Solid,
+            color: 'white',
           },
-          width: ctnRef?.current?.clientWidth,
-          height: 300,
+          textColor: 'black',
         },
-      );
-      console.debug('chart created')
-    }
+        width: ctnRef?.current?.clientWidth,
+        height: 300,
+      },
+    );
+    console.debug('chart created')
     // add data
-    series.current = chart.current?.addAreaSeries({
+    series.current = chart.current.addAreaSeries({
       lineColor: '#2962FF',
       topColor: '#2962FF',
       bottomColor: 'rgba(41, 98, 255, 0.28)'
     });
-    series.current?.setData(initialData.current);
+    series.current.setData(initialData.current);
     chart.current.timeScale().fitContent();
     console.debug('data injected')
+    // customization
+    series.current.applyOptions({
+      priceFormat: {
+        type: 'volume',
+        precision: 2
+      }
+    })
     // add event listener
     const handleResize = () => {
       chart.current?.applyOptions({
